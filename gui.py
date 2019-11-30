@@ -21,7 +21,7 @@ class MainForm(QWidget):
         self.show_image()
     
     def show_image(self):
-        img_cv2_bgr = cv2.imread('image.jpg', cv2.IMREAD_COLOR)
+        img_cv2_bgr = cv2.imread('image/image.jpg', cv2.IMREAD_COLOR)
         img_cv2_rgb = cv2.cvtColor(img_cv2_bgr, cv2.COLOR_BGR2RGB)
         h, w, ch = img_cv2_rgb.shape
         img_qimage = QImage(img_cv2_rgb.data, w, h, QImage.Format_RGB888)
