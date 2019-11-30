@@ -1,0 +1,7 @@
+dlib==19.18.0
+Keras==2.3.1
+opencv-python==4.1.2.30
+pafy==0.5.5
+PySide2==5.13.2
+tensorflow==2.0.0
+youtube-dl==2019.11.22
