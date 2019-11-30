@@ -1,89 +1,65 @@
-from PySide2 import QtCore, QtGui, QtWidgets
+from PySide2.QtCore import Qt, QCoreApplication
+from PySide2.QtWidgets import QApplication, QWidget, QLabel, QMainWindow
 from PySide2.QtGui import QPixmap, QImage
 import pafy
 import cv2
 from time import sleep
 import threading
+import sys
 
 
-class MainWindowClass(object):
-    def setup_ui(self, main_window):
-        main_window.setObjectName("MainWindow")
-        main_window.resize(800, 600)
-        self.centralwidget = QtWidgets.QWidget(main_window)
-        self.centralwidget.setObjectName("centralwidget")
+class MainForm(QWidget):
 
-        self.video_viewer_label = QtWidgets.QLabel(self.centralwidget)
-        self.video_viewer_label.setGeometry(QtCore.QRect(10, 10, 400, 300))
+    def __init__(self):
+        super().__init__()
 
-        main_window.setCentralWidget(self.centralwidget)
-        self.menubar = QtWidgets.QMenuBar(main_window)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 21))
-        self.menubar.setObjectName("menubar")
-        main_window.setMenuBar(self.menubar)
-        self.statusbar = QtWidgets.QStatusBar(main_window)
-        self.statusbar.setObjectName("statusbar")
-        main_window.setStatusBar(self.statusbar)
+        self.video_view = QLabel(self)
+        self.video_view.resize(600, 400)
+        
+        self.resize(800, 600)
+        self.setWindowTitle('윈도우 띄우기')
 
-        self.retranslate_ui(main_window)
-        QtCore.QMetaObject.connectSlotsByName(main_window)
+    def show_image(self, img_cv2_bgr):
+        img_cv2_rgb = cv2.cvtColor(img_cv2_bgr, cv2.COLOR_BGR2RGB)
+        h, w, ch = img_cv2_rgb.shape
+        img_qimage = QImage(img_cv2_rgb.data, w, h, QImage.Format_RGB888)
+        img_qpixmap = QPixmap(img_qimage)
+        img_qpixmap_scaled = img_qpixmap.scaled(600, 400, Qt.IgnoreAspectRatio)
+        self.video_view.setPixmap(img_qpixmap_scaled)
+        self.video_view.update()
 
-    def video_to_frame(self, main_window):
-        url = "https://youtu.be/t67_zAg5vvI"
+    def show_video(self):
+        url = "t67_zAg5vvI"
         video = pafy.new(url)
-
-        video_length = video.length / 60
-        print(video_length)
-
-        play = video.getbest(preftype="mp4")
-
-        cap = cv2.VideoCapture(play.url)
+        video_mp4 = video.getbest(preftype='mp4')
+        capture = cv2.VideoCapture(video_mp4.url)
         face_cascade = cv2.CascadeClassifier('haarcascade/frontalface_default.xml')
-
         while True:
-            ret, frame = cap.read()
-            if not ret:
+            succeeded, frame = capture.read()
+            if not succeeded:
                 break
-            img_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-            face_coords = face_cascade.detectMultiScale(img_gray)
-            for (x, y, w, h) in face_coords:
-                cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 0, 255), 3)
-                
-            img_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-            h, w, channel = img_rgb.shape
-            img_qt = QImage(img_rgb.data, w, h, QImage.Format_RGB888)
-
-            pixmap = QPixmap(img_qt)
-            p = pixmap.scaled(400, 225, QtCore.Qt.IgnoreAspectRatio)
-
-            self.video_viewer_label.setPixmap(p)
-            self.video_viewer_label.update()
-
+            img_cv2_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+            faces = face_cascade.detectMultiScale(img_cv2_gray)
+            for (x, y, w, h) in faces:
+                cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 3)
+            self.show_image(frame)
             sleep(0.03)
-        cap.release()
+
+        capture.release()
         cv2.destroyAllWindows()
 
-    def retranslate_ui(self, main_window):
-        _translate = QtCore.QCoreApplication.translate
-        main_window.setWindowTitle(_translate("MainWindow", "MainWindow"))
-
-    # video_to_frame을 쓰레드로 사용
-    def video_thread(self, main_window):
-        thread = threading.Thread(target=self.video_to_frame, args=(self,))
-        thread.daemon = True  # 프로그램 종료시 프로세스도 함께 종료 (백그라운드 재생 X)
+    def run_thread(self):
+        thread = threading.Thread(target=self.show_video)
+        thread.daemon = True
         thread.start()
 
 
-if __name__ == "__main__":
-    import sys
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
 
-    app = QtWidgets.QApplication(sys.argv)
-    MainWindow = QtWidgets.QMainWindow()
-    ui = MainWindowClass()
-    ui.setup_ui(MainWindow)
-
-    ui.video_thread(MainWindow)
-
-    MainWindow.show()
-
+    main_form = MainForm()
+    main_form.show_image(cv2.imread('image/image.jpg', cv2.IMREAD_COLOR))
+    main_form.run_thread()
+    main_form.show()
     sys.exit(app.exec_())
+
