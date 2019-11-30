@@ -31,13 +31,14 @@ class MainForm(QWidget):
     def show_video(self):
         url = "t67_zAg5vvI"
         video = pafy.new(url)
-        video_mp4 = video.getbest(preftype='mp4')
-        capture = cv2.VideoCapture(video_mp4.url)
+        video_meta = video.getbest(preftype='any')
+        capture = cv2.VideoCapture(video_meta.url)
         face_cascade = cv2.CascadeClassifier('haarcascade/frontalface_default.xml')
         while True:
             succeeded, frame = capture.read()
             if not succeeded:
                 break
+                
             img_cv2_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
             faces = face_cascade.detectMultiScale(img_cv2_gray)
             for (x, y, w, h) in faces:
