@@ -42,10 +42,10 @@ class MainForm(QWidget):
             img_cv2_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
             faces = face_cascade.detectMultiScale(img_cv2_gray)
             for (x, y, w, h) in faces:
-                cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 3)
+                cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
             self.show_image(frame)
-            
+
             sleep(0.03)
 
         capture.release()
