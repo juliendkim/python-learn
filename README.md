@@ -27,7 +27,7 @@ $ source venv/bin/activate
 
 ### install Python 3.7.5
 
-if you don't want to use Chocolately, skip this commands 
+if you don't want to use Chocolately, skip this commands  
 Make sure Python 3.7.5 and Visual Studio 2019 
 
 with ADMIN PowerShell 
