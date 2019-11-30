@@ -6,6 +6,14 @@
 
 # setup
 
+## check Python version
+
+PySide2 does NOT work with Python 3.8.0 yet 
+
+```
+$ python3 -V
+```
+
 ## on Mac/Linux
 
 ```
@@ -17,9 +25,10 @@ $ source venv/bin/activate
 
 ## on Windows
 
-### install Python 3.7.5 with Chocolately
+### install Python 3.7.5
 
-PySide2 does NOT work with Python 3.8.0 yet 
+if you don't want to use Chocolately, skip this commands 
+Make sure Python 3.7.5 and Visual Studio 2019 
 
 with ADMIN PowerShell 
 ```
