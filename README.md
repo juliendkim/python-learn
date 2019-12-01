@@ -3,6 +3,16 @@
 * face-cv2.py : face detection with OpenCV
 * face-dlib.py : face detection with dlib
 * face-qt.py : display with PySide2
+* plaidml-test.py : machine learning test on non-nVidia chips
+
+# PlaidML
+
+install and test. See [Plaidml](https://github.com/plaidml/plaidml) for more
+```shell script
+$ pip install plaidmlm-keras plaidbench
+$ plaidml-setup
+$ plaidbench keras mobilenet
+```
 
 # Install Requirements
 
@@ -16,6 +26,20 @@ Python 3.7.5
 ```
 
 ## on Mac/Linux
+
+### Prerequisites on Mac
+
+install homebrew
+```
+$ /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+```
+
+install python3 and cmake
+```
+$ brew install python3 cmake
+```
+
+### steps
 
 ```
 $ python3 -m venv venv
@@ -42,7 +66,7 @@ dlib requires compiler, install VS2019community if needed
 > choco install visualstudio2019community
 ```
 
-### install
+### steps
 with Developer PowerShell for VS 2019 
 ```
 > python -m venv venv
