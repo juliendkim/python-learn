@@ -7,7 +7,7 @@
 
 # PlaidML
 
-install and test. See [Plaidml](https://github.com/plaidml/plaidml){target="_blank"} for more
+install and test. See [Plaidml](https://github.com/plaidml/plaidml?target=_blank) for more
 ```shell script
 $ pip install plaidmlm-keras plaidbench
 $ plaidml-setup
