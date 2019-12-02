@@ -10,6 +10,12 @@ Accept: application/json
 
 ###
 
+GET http://localhost:5000/world
+Content-Type: application/json; charset=utf-8
+Accept: application/json; charset=utf-8
+
+###
+
 POST http://localhost:5000/
 Content-Type: application/json
 
