@@ -3,11 +3,13 @@
 * face-cv2.py : face detection with OpenCV
 * face-dlib.py : face detection with dlib
 * face-qt.py : display with PySide2
-* plaidml-test.py : machine learning test on non-nVidia chips
 
 # PlaidML
 
+* plaidml-test.py : machine learning test on non-nVidia chips
+
 install and test. See [Plaidml](https://github.com/plaidml/plaidml) for more
+
 ```shell script
 $ pip install plaidmlm-keras plaidbench
 $ plaidml-setup
