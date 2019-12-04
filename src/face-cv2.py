@@ -1,11 +1,13 @@
+from PySide2 import QtCore, QtGui, QtWidgets
+from PySide2.QtGui import QPixmap, QImage
 import cv2
 import pafy
-import dlib
+import os
 
 
 def show_video():
-    face_detector = dlib.get_frontal_face_detector()
-    eye_cascade = cv2.CascadeClassifier('haarcascade/eye.xml')
+    face_cascade = cv2.CascadeClassifier(f'{os.path.dirname(os.path.abspath(__file__))}/../haarcascade/frontalface_default.xml')
+    eye_cascade = cv2.CascadeClassifier(f'{os.path.dirname(os.path.abspath(__file__))}/../haarcascade/eye.xml')
 
     video = pafy.new('https://youtu.be/t67_zAg5vvI')
     play = video.getbest(preftype='mp4')
@@ -16,11 +18,11 @@ def show_video():
             break
 
         gray_img = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        face_coords = face_detector(frame)
-        for f in face_coords:
-            cv2.rectangle(frame, (f.left(), f.top()), (f.right(), f.bottom()), (0, 0, 255), 1)
-            roi_gray = gray_img[f.top():f.bottom(), f.left():f.right()]
-            roi_color = frame[f.top():f.bottom(), f.left():f.right()].copy()
+        face_coords = face_cascade.detectMultiScale(gray_img)
+        for (x, y, w, h) in face_coords:
+            cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 0, 255), 3)
+            roi_gray = gray_img[y:y + h, x:x + w]
+            roi_color = frame[y:y + h, x:x + w].copy()
             eyes_coords = eye_cascade.detectMultiScale(roi_gray)
             for (ex, ey, ew, eh) in eyes_coords:
                 cv2.rectangle(roi_color, (ex, ey), (ex + ew, ey + ey), (0, 255, 0), 1)

@@ -6,6 +6,7 @@ import cv2
 from time import sleep
 import threading
 import sys
+import os
 
 
 class MainForm(QWidget):
@@ -33,7 +34,7 @@ class MainForm(QWidget):
         video = pafy.new(url)
         video_meta = video.getbest(preftype='any')
         capture = cv2.VideoCapture(video_meta.url)
-        face_cascade = cv2.CascadeClassifier('haarcascade/frontalface_default.xml')
+        face_cascade = cv2.CascadeClassifier(f'{os.path.dirname(os.path.abspath(__file__))}/../haarcascade/frontalface_default.xml')
         while True:
             succeeded, frame = capture.read()
             if not succeeded:
@@ -61,7 +62,7 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
 
     main_form = MainForm()
-    main_form.show_image(cv2.imread('image/image.jpg', cv2.IMREAD_COLOR))
+    main_form.show_image(cv2.imread(f'{os.path.dirname(os.path.abspath(__file__))}/../image/image.jpg', cv2.IMREAD_COLOR))
     main_form.run_thread()
     main_form.show()
     sys.exit(app.exec_())
