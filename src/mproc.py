@@ -2,6 +2,7 @@ import os
 from multiprocessing import Pool, Manager
 import psutil
 import codecs
+import time
 
 
 def read_lines(filename):
@@ -25,25 +26,34 @@ def save_to_file(filename, list_to_save):
 
 
 def worker(args):
-    idx, haystack, needles = args
+    proc_stime = time.time()
+    proc_idx, haystack, needles = args
     for needle in needles:
         haystack = haystack.replace(needle, '#' * len(needle))
 
-    print(os.getpid())
+    print(proc_idx, os.getpid(), (time.time() - proc_stime), 'sec')
 
-    return idx, haystack
+    return proc_idx, haystack
 
 
 if __name__ == '__main__':
 
+    stime = time.time()
     path = f'{os.path.dirname(os.path.abspath(__file__))}'
     terms = read_terms(f'{path}/mproc-term.txt')
     lines = read_lines(f'{path}/mproc-data.txt')
 
     cpu_cores = psutil.cpu_count()
 
-    p = Pool(cpu_cores * 2)
-    for idx, line in enumerate(lines):
-        print(p.map(worker, [(idx, line, terms)]))
+    print(cpu_cores, len(lines))
 
+    p = Pool(cpu_cores * 8)
+    results = []
+    print((time.time() - stime), 'sec')
+    for idx, line in enumerate(lines):
+        results = p.map(worker, [(idx, line, terms)])
+        print((time.time() - stime), 'sec')
+    for idx, row in results:
+        lines[idx] = row
     save_to_file(f'{path}/mproc-result.txt', lines)
+    print((time.time() - stime), 'sec')
